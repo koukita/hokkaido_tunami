@@ -38,12 +38,43 @@
     //【Leafletの地図上にテキストボックスを配置】https://ktgis.net/service/leafletlearn/advanced.html#step13
     //＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
+    //＝＝＝URLに緯度経度、Zoomレベルを入力する＝＝＝＝
+    //初期値
+    var center_lat=43.193001;
+    var center_lng=141.279533;
+    var zoom_level=12; 
+
+    //URLパラメータの緯度経度、ズームレベルを取得する
+    //参考：http://qiita.com/tonkatu_tanaka/items/99d167ded9330dbc4019
+    var arg = new Object; //変数をオブジェクトで作成
+    var pair = location.search.substring(1).split('&');    //URLの後ろの「？」からで「＆」で区切ったものを配列で代入
+    //パラメータの数だけループ
+    for(var i=0;pair[i];i++) {
+        //「=」で区切って、キーと値に分ける
+        var kv = pair[i].split('=');
+        //変数argに配列を代入
+        arg[kv[0]]=kv[1];
+    };
+
+    //URLにパラメータがある場合に、緯度経度とズームレベルを更新する
+    if(i>0){
+        //配列から緯度経度とズームレベルを表示する
+        center_lat = arg.lat;
+        center_lng = arg.lng;
+        zoom_level = arg.zoom;
+    }; 
+
     //＝＝＝＝＝＝＝Leaflet地図の設定＝＝＝＝＝＝＝
     var map = L.map("map", {
       minZoom: 10,
       maxZoom: 16,
-      zoom: 12,
-	  center: [43.193001, 141.279533]
+      zoom: zoom_level,
+	  center: [center_lat, center_lng]
+    });
+    //地図を移動し終わったときに、センターの座標を取得
+    map.on('moveend',function(){
+        //URLに地図の中心座標を入力
+        history.replaceState('','','hokkaido_tunami.html?lat=' + map.getCenter().lat + '&lng=' + map.getCenter().lng + '&zoom=' + map.getZoom());
     });
 
     //＝＝＝＝＝＝＝背景地図の設定＝＝＝＝＝＝＝＝
@@ -68,6 +99,14 @@
         return this.ele;
     };
     maxsin_box.addTo(map);
+    //はじめのテキストボックスを表示する     
+    var box_1 = document.getElementById("maxsin_div");
+    var html_1 = "浸水深（MAX_SIN）:    m<br>" +
+        "原点X:         m<br>" +
+        "原点Y:         m";
+      box_1.innerHTML = html_1;
+      box_1.style.visibility = "visible";
+
 
     //＝＝＝＝スタイルをクリアするための関数＝＝＝＝
     var highlight;
