@@ -102,8 +102,7 @@
     //はじめのテキストボックスを表示する     
     var box_1 = document.getElementById("maxsin_div");
     var html_1 = "浸水深（MAX_SIN）:    m<br>" +
-        "原点X:         m<br>" +
-        "原点Y:         m";
+        "市町村:         m";
       box_1.innerHTML = html_1;
       box_1.style.visibility = "visible";
 
@@ -129,11 +128,11 @@
 					var p = properties.MAX_SIN;
 					return {
 						fillColor:
-                p <= 1 ? '#ffff00' : 
-								p <= 5 ? '#ff80ff' :
-								p <= 10 ? '#ff0080' :
-								p <= 20 ? '#ff0000' : '#800080',
-						fillOpacity: 0.5, //透過率
+                p <= 1 ? '#ffff00' :
+								p <= 5 ? '#ff8000' :
+								p <= 10 ? '#ff5b5b' :
+								p <= 20 ? '#dd000b' : '#800080',
+						fillOpacity: 0.7, //透過率
 						stroke: true,
 						fill: true,
 						color: 'red',
@@ -153,8 +152,7 @@
       //テキストボックスに値を表示する     
       var box = document.getElementById("maxsin_div");
       var html = "浸水深（MAX_SIN）:" + properties.MAX_SIN + "m<br>" +
-        "原点X:" + properties.原点X.toFixed(1) + "m<br>" +
-        "原点Y:" + properties.原点Y.toFixed(1) + "m";
+        "市町村:" + properties.layer;
       box.innerHTML = html;
       box.style.visibility = "visible";
 
