@@ -143,7 +143,7 @@
       //これを設定しないと、mouseoverイベントでスタイルを設定できない
       interactive: true,
 			getFeatureId: function(f) {
-				return f.properties.fid; //一意のIDを指定
+				return f.properties.ID; //一意のIDを指定
 			}
     })
     .on('mouseover', function(e) {  //マウスムーブイベント
@@ -156,7 +156,7 @@
 
       //カーソルが外れた場合にスタイルをもとに戻す
       clearHighlight();
-			highlight = properties.fid;
+			highlight = properties.ID;
       
       //マウスのあるところのスタイルを設定
       var style = {
@@ -169,7 +169,7 @@
 				weight: 2,
 			};
       //スタイルを適用
-		  vectorGrid_1.setFeatureStyle(properties.fid, style);
+		  vectorGrid_1.setFeatureStyle(properties.ID, style);
 
     }).addTo(map);
 
