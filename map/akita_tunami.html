@@ -71,7 +71,7 @@
     //地図を移動し終わったときに、センターの座標を取得
     map.on('moveend',function(){
         //URLに地図の中心座標を入力
-        history.replaceState('','','hokkaido_tunami.html?lat=' + map.getCenter().lat + '&lng=' + map.getCenter().lng + '&zoom=' + map.getZoom());
+        history.replaceState('','','akita_tunami.html?lat=' + map.getCenter().lat + '&lng=' + map.getCenter().lng + '&zoom=' + map.getZoom());
     });
 
     //＝＝＝＝＝＝＝背景地図の設定＝＝＝＝＝＝＝＝
@@ -81,56 +81,56 @@
       maxNativeZoom: 16
     }).addTo(map);
 
-    //＝＝＝＝＝＝テキストボックスの設定＝＝＝＝＝＝＝＝
-    //浸水深を表示するためのテキストボックスを左上にdivコントロールで表示
-    var maxsin_box = L.control({ position: "topleft" });
-    maxsin_box.onAdd = function (map) {
-        //divを作成
-        this.ele = L.DomUtil.create('div', "infostyle");
-        //後で使うためにidを設定
-        this.ele.id = "maxsin_div";
-        //最初は非表示
-        this.ele.style.visibility = "hidden";
-        //div上のとmousemoveイベントがmapに連鎖しないように設定
-        this.ele.onmousemove = function (e) { e.stopPropagation() };
-        return this.ele;
-    };
-    maxsin_box.addTo(map);
-    //はじめのテキストボックスを表示する     
-    var box_1 = document.getElementById("maxsin_div");
-    var html_1 = "浸水深（MAX_SIN）:    m<br>" +
-        "市町村:         m";
-      box_1.innerHTML = html_1;
-      box_1.style.visibility = "visible";
+    // //＝＝＝＝＝＝テキストボックスの設定＝＝＝＝＝＝＝＝
+    // //浸水深を表示するためのテキストボックスを左上にdivコントロールで表示
+    // var maxsin_box = L.control({ position: "topleft" });
+    // maxsin_box.onAdd = function (map) {
+    //     //divを作成
+    //     this.ele = L.DomUtil.create('div', "infostyle");
+    //     //後で使うためにidを設定
+    //     this.ele.id = "maxsin_div";
+    //     //最初は非表示
+    //     this.ele.style.visibility = "hidden";
+    //     //div上のとmousemoveイベントがmapに連鎖しないように設定
+    //     this.ele.onmousemove = function (e) { e.stopPropagation() };
+    //     return this.ele;
+    // };
+    // maxsin_box.addTo(map);
+    // //はじめのテキストボックスを表示する     
+    // var box_1 = document.getElementById("maxsin_div");
+    // var html_1 = "浸水深（MAX_SIN）:    m<br>" +
+    //     "市町村:         m";
+    //   box_1.innerHTML = html_1;
+    //   box_1.style.visibility = "visible";
 
 
-    //＝＝＝＝スタイルをクリアするための関数＝＝＝＝
-    //マウスが地物から移動した場合に、スタイルをもとに戻す
-    var highlight;
-		var clearHighlight = function() {
-			if (highlight) {
-        vectorGrid_1.resetFeatureStyle(highlight);
-			}
-			highlight = null;
-		};
+    // //＝＝＝＝スタイルをクリアするための関数＝＝＝＝
+    // //マウスが地物から移動した場合に、スタイルをもとに戻す
+    // var highlight;
+		// var clearHighlight = function() {
+		// 	if (highlight) {
+    //     vectorGrid_1.resetFeatureStyle(highlight);
+		// 	}
+		// 	highlight = null;
+		// };
 
     //＝＝＝＝＝＝＝ベクタタイルを地図に表示する＝＝＝＝＝＝＝＝
     //秋田県津波浸水深　2023年2月ダウンロード
     var vectorGrid_1 = L.vectorGrid.protobuf("https://koukita.github.io/hokkaido_tunami/akitaken_vectortile/{z}/{x}/{y}.pbf", {
       attribution: "<a href='https://www.pref.akita.lg.jp/pages/archive/53932' target='_blank'>津波浸水想定データ</a>",
-      maxNativeZoom: 16,
+      maxNativeZoom: 14,
       minNativeZoom: 10,
       //minZoom: 12,
       rendererFactory: L.canvas.tile,
       vectorTileLayerStyles: {
-        "最大浸水深": function(properties, zoom) { //レイヤを指定し、浸水深で色分類
-					var p = properties.GRIDCODE;
+        "akita_tunami": function(properties, zoom) { //レイヤを指定し、浸水深で色分類
+					// var p = properties.GRIDCODE;
 					return {
-						fillColor:
-                p <= 500 ? '#ffff00' :
-								p <= 1000 ? '#ff8000' :
-								p <= 1500 ? '#ff5b5b' :
-								p <= 2000 ? '#dd000b' : '#800080',
+						fillColor:'#dd000b',
+                // p <= 500 ? '#ffff00' :
+								// p <= 1000 ? '#ff8000' :
+								// p <= 1500 ? '#ff5b5b' :
+								// p <= 2000 ? '#dd000b' : '#800080',
 						fillOpacity: 0.7, //透過率
 						stroke: true,
 						fill: true,
@@ -139,37 +139,37 @@
 					}
         }
       },
-      //スタイルを更新するためのオプション
-      //これを設定しないと、mouseoverイベントでスタイルを設定できない
-      interactive: true,
-			getFeatureId: function(f) {
-				return f.properties.ID; //一意のIDを指定
-			}
-    })
-    .on('mouseover', function(e) {  //マウスムーブイベント
-      var properties = e.layer.properties;
-      //テキストボックスに値を表示する     
-      var box = document.getElementById("maxsin_div");
-      var html = "GRIDCODE:" + properties.GRIDCODE + "m<br>" 
-      box.innerHTML = html;
-      box.style.visibility = "visible";
+    //   //スタイルを更新するためのオプション
+    //   //これを設定しないと、mouseoverイベントでスタイルを設定できない
+    //   interactive: true,
+		// 	getFeatureId: function(f) {
+		// 		return f.properties.ID; //一意のIDを指定
+		// 	}
+    // })
+    // .on('mouseover', function(e) {  //マウスムーブイベント
+    //   var properties = e.layer.properties;
+    //   //テキストボックスに値を表示する     
+    //   var box = document.getElementById("maxsin_div");
+    //   var html = "GRIDCODE:" + properties.GRIDCODE + "m<br>" 
+    //   box.innerHTML = html;
+    //   box.style.visibility = "visible";
 
-      //カーソルが外れた場合にスタイルをもとに戻す
-      clearHighlight();
-			highlight = properties.ID;
+    //   //カーソルが外れた場合にスタイルをもとに戻す
+    //   clearHighlight();
+		// 	highlight = properties.ID;
       
-      //マウスのあるところのスタイルを設定
-      var style = {
-				fillColor: 'red',
-				fillOpacity: 1.0,
-				stroke: true,
-				fill: true,
-				color: 'red',
-				opacity: 1,
-				weight: 2,
-			};
-      //スタイルを適用
-		  vectorGrid_1.setFeatureStyle(properties.ID, style);
+    //   //マウスのあるところのスタイルを設定
+    //   var style = {
+		// 		fillColor: 'red',
+		// 		fillOpacity: 1.0,
+		// 		stroke: true,
+		// 		fill: true,
+		// 		color: 'red',
+		// 		opacity: 1,
+		// 		weight: 2,
+		// 	};
+    //   //スタイルを適用
+		//   vectorGrid_1.setFeatureStyle(properties.ID, style);
 
     }).addTo(map);
 
